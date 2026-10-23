@@ -1,5 +1,5 @@
 # minimal-flask-app
-Minimal code for a Flask app making calls to the OpenAI API.
+Minimal Flask image studio that creates a GPT Image work and displays it with a fictional museum tombstone and extended gallery label.
 
 You need Python 3 installed. Run the commands below from inside the project folder.
 

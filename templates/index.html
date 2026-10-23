@@ -1,394 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#fffaf2">
-    <title>Ask me anything · Little Questions Club</title>
-    <style>
-        :root {
-            color-scheme: light;
-            --ink: #262b36;
-            --muted: #737986;
-            --blue: #29a9e8;
-            --blue-dark: #168bc6;
-            --cream: #fffaf2;
-            --paper: #ffffff;
-            --line: #eee8df;
-            --pink: #ffe8e4;
-            --shadow: 0 18px 55px rgba(56, 48, 36, 0.08);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            min-width: 320px;
-            min-height: 100vh;
-            margin: 0;
-            background:
-                radial-gradient(ellipse at 8% 15%, rgba(255, 222, 210, 0.42), transparent 28rem),
-                radial-gradient(ellipse at 95% 77%, rgba(204, 238, 255, 0.5), transparent 28rem),
-                var(--cream);
-            color: var(--ink);
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            line-height: 1.55;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .site-header {
-            width: min(1120px, calc(100% - 48px));
-            height: 82px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
-
-        .brand-mark {
-            width: 36px;
-            height: 36px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            background: var(--blue);
-            color: white;
-            font-size: 1.25rem;
-            transform: rotate(-5deg);
-        }
-
-        .header-note {
-            color: var(--muted);
-            font-size: 0.88rem;
-            font-weight: 600;
-        }
-
-        main {
-            width: min(1120px, calc(100% - 48px));
-            min-height: calc(100vh - 142px);
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
-            align-items: center;
-            gap: clamp(42px, 8vw, 110px);
-            padding: 44px 0 72px;
-        }
-
-        .intro {
-            position: relative;
-            padding: 8px 0 24px;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 0 20px;
-            padding: 8px 13px;
-            border: 1px solid #f0d9d0;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, 0.7);
-            color: #875d51;
-            font-size: 0.78rem;
-            font-weight: 750;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            max-width: 610px;
-            margin: 0;
-            font-size: clamp(3rem, 6.4vw, 5.3rem);
-            font-weight: 850;
-            letter-spacing: -0.075em;
-            line-height: 0.99;
-        }
-
-        h1 span {
-            color: var(--blue);
-        }
-
-        .intro-copy {
-            max-width: 440px;
-            margin: 24px 0 0;
-            color: var(--muted);
-            font-size: 1.08rem;
-        }
-
-        .tiny-note {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            margin-top: 30px;
-            color: #656b77;
-            font-size: 0.9rem;
-            font-weight: 650;
-        }
-
-        .tiny-note span {
-            display: grid;
-            width: 29px;
-            height: 29px;
-            place-items: center;
-            border-radius: 50%;
-            background: var(--pink);
-        }
-
-        .question-card {
-            position: relative;
-            padding: clamp(24px, 4vw, 38px);
-            border: 1px solid rgba(238, 232, 223, 0.9);
-            border-radius: 24px;
-            background: var(--paper);
-            box-shadow: var(--shadow);
-        }
-
-        .question-card::before {
-            position: absolute;
-            z-index: -1;
-            top: 15px;
-            right: -13px;
-            bottom: -13px;
-            left: 15px;
-            border: 1px solid #d9effa;
-            border-radius: 24px;
-            content: "";
-            transform: rotate(2deg);
-        }
-
-        .card-heading {
-            display: flex;
-            align-items: flex-start;
-            gap: 13px;
-            margin-bottom: 24px;
-        }
-
-        .card-icon {
-            display: grid;
-            width: 43px;
-            height: 43px;
-            flex: 0 0 auto;
-            place-items: center;
-            border-radius: 14px;
-            background: #e8f7ff;
-            font-size: 1.25rem;
-        }
-
-        .card-heading h2 {
-            margin: 0;
-            font-size: 1.12rem;
-            font-weight: 800;
-            letter-spacing: -0.035em;
-        }
-
-        .card-heading p {
-            margin: 3px 0 0;
-            color: var(--muted);
-            font-size: 0.88rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 9px;
-            font-size: 0.87rem;
-            font-weight: 750;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 150px;
-            resize: vertical;
-            padding: 15px 16px;
-            border: 1px solid #e7e8eb;
-            border-radius: 13px;
-            outline: none;
-            background: #fdfdfd;
-            color: var(--ink);
-            font: inherit;
-            font-size: 0.96rem;
-            transition: border-color 160ms ease, box-shadow 160ms ease;
-        }
-
-        textarea::placeholder {
-            color: #a1a5ad;
-        }
-
-        textarea:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 4px rgba(41, 169, 232, 0.13);
-        }
-
-        button {
-            width: 100%;
-            min-height: 52px;
-            margin-top: 14px;
-            border: 0;
-            border-radius: 13px;
-            background: var(--blue);
-            box-shadow: 0 7px 15px rgba(41, 169, 232, 0.2);
-            color: white;
-            cursor: pointer;
-            font: inherit;
-            font-size: 0.97rem;
-            font-weight: 800;
-            transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
-        }
-
-        button:hover {
-            background: var(--blue-dark);
-            box-shadow: 0 9px 20px rgba(41, 169, 232, 0.28);
-            transform: translateY(-1px);
-        }
-
-        button:focus-visible {
-            outline: 3px solid #164f70;
-            outline-offset: 3px;
-        }
-
-        .answer {
-            margin-top: 22px;
-            padding: 18px;
-            border: 1px solid #d9effa;
-            border-radius: 15px;
-            background: #f2faff;
-        }
-
-        .answer h2 {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 0 8px;
-            font-size: 0.96rem;
-            font-weight: 800;
-        }
-
-        .answer p {
-            margin: 0;
-            color: #505866;
-            font-size: 0.95rem;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
-        }
-
-        footer {
-            padding: 14px 24px 22px;
-            color: #9296a0;
-            font-size: 0.78rem;
-            text-align: center;
-        }
-
-        @media (max-width: 760px) {
-            .site-header,
-            main {
-                width: min(560px, calc(100% - 36px));
-            }
-
-            .site-header {
-                height: 70px;
-            }
-
-            .header-note {
-                font-size: 0.78rem;
-            }
-
-            main {
-                min-height: auto;
-                grid-template-columns: 1fr;
-                gap: 28px;
-                padding: 48px 0 58px;
-            }
-
-            .intro {
-                padding-bottom: 0;
-            }
-
-            h1 {
-                max-width: 520px;
-                font-size: clamp(3.15rem, 11vw, 4.7rem);
-            }
-
-            .intro-copy {
-                margin-top: 17px;
-                font-size: 1rem;
-            }
-
-            .tiny-note {
-                margin-top: 19px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .site-header,
-            main {
-                width: calc(100% - 28px);
-            }
-
-            .header-note {
-                max-width: 120px;
-                text-align: right;
-            }
-
-            .question-card {
-                padding: 22px 18px;
-                border-radius: 20px;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f7">
+  <title>Soft Editions — image studio</title>
+  <style>
+    :root { --bg:#f7f7f7; --ink:#242323; --muted:#696563; --line:#d5d2d0; --button:#878280; --paper:#fff; --shadow:0 2px 0 rgba(36,35,35,.08); }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.45; }
+    .header { width:min(1160px,calc(100% - 48px)); min-height:68px; margin:auto; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--ink); }
+    .brand { color:inherit; text-decoration:none; font-size:1.02rem; font-weight:900; letter-spacing:-.06em; }
+    .brand-dot { display:inline-grid; width:18px; height:18px; margin-right:7px; place-items:center; background:var(--ink); color:#fff; font-size:.65rem; vertical-align:1px; }
+    .edition { color:var(--muted); font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    main { width:min(1160px,calc(100% - 48px)); margin:0 auto; padding:76px 0 88px; }
+    .hero { max-width:760px; margin:0 auto 58px; text-align:center; }
+    .kicker { margin:0 0 16px; color:var(--button); font-size:.76rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    h1 { max-width:680px; margin:0 auto; font-family:Georgia,"Times New Roman",serif; font-size:clamp(3rem,6vw,5.5rem); font-weight:400; letter-spacing:-.075em; line-height:.94; }
+    .hero-copy { max-width:530px; margin:24px auto 0; color:var(--muted); font-size:1.05rem; }
+    .prompt-panel { width:min(710px,100%); margin:38px auto 0; padding:10px; border:1px solid var(--ink); background:var(--paper); box-shadow:var(--shadow); }
+    form { display:grid; gap:10px; }
+    textarea { width:100%; min-height:92px; padding:5px; border:0; outline:0; resize:vertical; background:transparent; color:var(--ink); font:inherit; line-height:1.4; }
+    textarea::placeholder { color:#aaa5a2; }
+    .loading-state { display:none; min-height:92px; place-items:center; gap:10px; color:var(--muted); font-size:.88rem; font-weight:700; }
+    .loading-mark { width:14px; height:14px; border:1px solid #c3bfbc; border-top-color:var(--button); border-radius:50%; animation:turn .8s linear infinite; }
+    .prompt-panel.is-generating textarea { display:none; }
+    .prompt-panel.is-generating .loading-state { display:grid; }
+    .prompt-panel.is-generating button { cursor:wait; opacity:.82; }
+    @keyframes turn { to { transform:rotate(360deg); } }
+    button { justify-self:end; min-width:145px; border:0; border-radius:0; padding:14px 17px; background:var(--button); color:#fff; cursor:pointer; font:inherit; font-size:.8rem; font-weight:900; letter-spacing:.02em; transition:filter .16s ease,transform .16s ease; }
+    button:hover { filter:brightness(.9); transform:translateY(-1px); }
+    button:focus-visible { outline:3px solid #b7b1ae; outline-offset:2px; }
+    .fine-print { margin:13px 0 0; color:#898482; font-size:.75rem; text-align:left; }
+    .error { width:min(710px,100%); margin:18px auto 0; padding:13px 15px; border:1px solid #a96c63; background:#fffafa; color:#6c4540; font-size:.9rem; }
+    .gallery { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr); gap:clamp(26px,5vw,72px); align-items:start; margin-top:72px; }
+    .artwork { padding:clamp(10px,1.8vw,18px); border:1px solid var(--ink); background:#e9e7e5; box-shadow:var(--shadow); }
+    .artwork img { display:block; width:100%; aspect-ratio:1/1; object-fit:cover; background:#d5d1cf; }
+    .caption { margin:10px 2px 0; color:#817c79; font-size:.72rem; }
+    .tombstone { border-top:1px solid var(--ink); padding-top:15px; }
+    .artist-field { margin:0 0 3px; color:#807b78; font-size:.69rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    .tombstone h2 { margin:0 0 4px; font-family:Georgia,"Times New Roman",serif; font-size:1.65rem; font-weight:400; letter-spacing:-.035em; }
+    .artist-bio { margin:0 0 22px; color:var(--muted); font-size:.88rem; }
+    .metadata { margin:0; border-top:1px solid var(--line); }
+    .metadata div { padding:12px 0; border-bottom:1px solid var(--line); }
+    dt { margin:0 0 3px; color:#807b78; font-size:.69rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    dd { margin:0; font-size:.9rem; }
+    .extended { margin-top:28px; padding-top:20px; border-top:1px solid var(--line); }
+    .extended h3 { margin:0 0 10px; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+    .extended p { margin:0; color:#4d4947; font-family:Georgia,"Times New Roman",serif; font-size:.98rem; line-height:1.58; }
+    .download { display:inline-flex; margin-top:20px; padding:10px 12px; border:1px solid var(--ink); color:var(--ink); font-size:.75rem; font-weight:900; letter-spacing:.04em; text-decoration:none; text-transform:uppercase; transition:background .16s ease,color .16s ease; }
+    .download:hover { background:var(--ink); color:#fff; }
+    .empty-gallery { margin-top:72px; padding:64px 28px; border:1px dashed #a8a3a0; text-align:center; color:var(--muted); }
+    .empty-gallery strong { display:block; margin-bottom:7px; color:var(--ink); font-family:Georgia,"Times New Roman",serif; font-size:1.35rem; font-weight:400; }
+    footer { width:min(1160px,calc(100% - 48px)); margin:auto; padding:24px 0 34px; border-top:1px solid var(--line); color:#8b8784; font-size:.75rem; }
+    @media (max-width:720px) { .header,main,footer { width:calc(100% - 32px); } .header { min-height:65px; } main { padding-top:48px; } button { width:100%; min-height:48px; justify-self:stretch; } .gallery { grid-template-columns:1fr; margin-top:52px; } .empty-gallery { margin-top:52px; } }
+  </style>
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" href="/" aria-label="Little Questions Club home">
-            <span class="brand-mark" aria-hidden="true">✦</span>
-            <span>little questions club</span>
-        </a>
-        <span class="header-note">A cozy corner for curious minds</span>
-    </header>
-
-    <main>
-        <section class="intro" aria-labelledby="page-title">
-            <p class="eyebrow"><span aria-hidden="true">✷</span> Your friendly answer pal</p>
-            <h1 id="page-title">Big question?<br>I'm <span>all ears.</span></h1>
-            <p class="intro-copy">Drop a thought, a what-if, or a wonderfully niche question. Get a helpful answer with a little anime energy.</p>
-            <p class="tiny-note"><span aria-hidden="true">💌</span> No question is too silly here.</p>
-        </section>
-
-        <section class="question-card" aria-labelledby="card-title">
-            <div class="card-heading">
-                <span class="card-icon" aria-hidden="true">💭</span>
-                <div>
-                    <h2 id="card-title">What's on your mind?</h2>
-                    <p>Type it out and let's figure it out together.</p>
-                </div>
-            </div>
-            <form method="POST">
-                <label for="prompt">Your question</label>
-                <textarea id="prompt" name="prompt" rows="5" placeholder="Ask me anything..." required>{{ request.form.get("prompt", "") }}</textarea>
-                <button type="submit">Send my question <span aria-hidden="true">→</span></button>
-            </form>
-
-            {% if result %}
-                <section class="answer" aria-labelledby="answer-title" aria-live="polite">
-                    <h2 id="answer-title"><span aria-hidden="true">✨</span> Your answer</h2>
-                    <p>{{ result }}</p>
-                </section>
-            {% endif %}
-        </section>
-    </main>
-
-    <footer>Made for curious minds, one question at a time.</footer>
+  <header class="header"><a class="brand" href="/"><span class="brand-dot">✦</span>soft editions</a><span class="edition">Image studio / 01</span></header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="kicker">A small generator for large walls</p>
+      <h1 id="page-title">Make an image.<br>Give it a life.</h1>
+      <p class="hero-copy">Describe an edition for the gallery. We will create the image and write its fictional museum record.</p>
+      <div class="prompt-panel"><form id="generation-form" method="post"><textarea id="prompt" name="prompt" rows="2" placeholder="A sunlit greenhouse, seen through a rain-streaked window…" required>{{ request.form.get('prompt', '') }}</textarea><div class="loading-state" aria-live="polite"><span class="loading-mark" aria-hidden="true"></span><span>Generating your edition…</span></div><button type="submit">Create edition <span aria-hidden="true">→</span></button></form></div>
+      <p class="fine-print">One prompt becomes an image, a tombstone, and a temporary place in the collection.</p>
+    </section>
+    {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+    {% if artwork %}
+      <section class="gallery" aria-label="Generated artwork and museum label">
+        <div><div class="artwork"><img src="{{ artwork.image_url }}" alt="Generated artwork for {{ request.form.get('prompt', '') }}"></div><p class="caption">Installation view, Soft Editions image studio.</p></div>
+        <aside class="tombstone" aria-labelledby="artwork-title">
+          <p class="artist-field">Artist</p><h2 id="artwork-title">{{ artwork.artist }}</h2><p class="artist-bio">{{ artwork.bio }}</p>
+          <dl class="metadata"><div><dt>Title and year</dt><dd><em>{{ artwork.title }}</em>, {{ artwork.year }}</dd></div><div><dt>Medium</dt><dd>{{ artwork.medium }}</dd></div><div><dt>Dimensions</dt><dd>{{ artwork.dimensions }}</dd></div><div><dt>Provenance</dt><dd>{{ artwork.provenance }}</dd></div><div><dt>Credit line</dt><dd>{{ artwork.credit_line }}</dd></div></dl>
+          <div class="extended"><h3>Extended label</h3><p>{{ artwork.label }}</p></div>
+          <a class="download" href="{{ artwork.image_url }}" download="soft-edition-{{ artwork.year }}.png">Download image <span aria-hidden="true">↓</span></a>
+        </aside>
+      </section>
+    {% else %}
+      <section class="empty-gallery" aria-label="Empty gallery wall"><strong>The wall is waiting.</strong>Start with an image prompt to install the first work.</section>
+    {% endif %}
+  </main>
+  <footer>Soft Editions is an experimental image studio. Every label is fictional; every viewing is real.</footer>
+  <script>
+    const form = document.querySelector('#generation-form');
+    if (form) {
+      form.addEventListener('submit', () => {
+        if (form.checkValidity()) {
+          form.closest('.prompt-panel').classList.add('is-generating');
+          form.querySelector('button').disabled = true;
+        }
+      });
+    }
+  </script>
 </body>
 </html>
