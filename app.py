@@ -54,6 +54,18 @@ def artwork_label(prompt):
             "dimensions": size, "provenance": provenance, "credit_line": "Gift of the artist's backpack", "label": label}
 
 
+def image_prompt_from_label(visitor_prompt, artwork):
+    """Turn the fictional museum record into concrete image-generation direction."""
+    return (
+        f"Create a square contemporary-art image for a museum collection. Visitor concept: {visitor_prompt}. "
+        f"Treat it as the work titled '{artwork['title']}' ({artwork['year']}) by {artwork['artist']}. "
+        f"Let the visual surface suggest this medium: {artwork['medium']}. "
+        "Use the label's sense of private desire meeting public display through deliberate texture, an ambiguous "
+        "relationship between evidence and invention, and a composed gallery-ready image. Do not include writing, "
+        "signatures, captions, watermarks, frames, or museum labels in the image."
+    )
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     artwork = None
@@ -64,8 +76,9 @@ def index():
             error = "Please describe the image you would like to place in the gallery."
         else:
             try:
-                response = client.images.generate(model="gpt-image-1", prompt=prompt, size="1024x1024", quality="medium", output_format="png")
                 artwork = artwork_label(prompt)
+                image_prompt = image_prompt_from_label(prompt, artwork)
+                response = client.images.generate(model="gpt-image-1", prompt=image_prompt, size="1024x1024", quality="medium", output_format="png")
                 artwork["image_url"] = f"data:image/png;base64,{response.data[0].b64_json}"
             except Exception as exc:
                 error = f"The studio could not complete this edition: {exc}"

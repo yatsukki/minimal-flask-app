@@ -1,85 +1,58 @@
-# minimal-flask-app
-Minimal Flask image studio that creates a GPT Image work and displays it with a fictional museum tombstone and extended gallery label.
+# Soft Editions: IAE design notes and user guide
 
-You need Python 3 installed. Run the commands below from inside the project folder.
+Soft Editions is a Flask image studio that turns a visitor's idea into a square image, a fictional museum tombstone, and an extended wall label. The writing voice draws selectively on **International Art English (IAE)**: the recurring language of contemporary-art press releases and institutional writing described by Alix Rule and David Levine in [“International Art English”](https://tc3.canopycanopycanopy.com/legacy/contents/international_art_english).
 
+This is a stylistic experiment, not a claim that IAE is the only valid way to write about art. The app deliberately keeps the label readable, compact, and clearly fictional.
 
-## macOS / Linux
+## 1. IAE features and their prompt rules
 
-```bash
-# Create virtual environment
-python3 -m venv ./venv
+Rule and Levine identify a recognizable lexicon, nominalization, paired terms, adverbial phrasing, dependent clauses, and spatial metaphors in IAE. Soft Editions uses a restrained set of those features.
 
-# Activate your virtual environment
-source venv/bin/activate
+| Chosen feature | Translation into the label rules |
+| --- | --- |
+| Abstract nouns / nominalization | The extended label uses nouns such as “display,” “evidence,” “invention,” “attention,” and “hesitation” to turn visual experience into a critical object. |
+| Spatial metaphor | The label describes images as “rooms” that hold and rearrange attention, rather than only describing depicted objects. |
+| Productive tension | A paired construction—“private desire and public choreography,” “evidence and invention”—frames the work as an unresolved relation. |
+| Institutional critical voice | Each label connects a visual claim to an invented theorist and invented book, mimicking the citation-based authority of curatorial prose without falsely citing a real source. |
+| Museum metadata | Artist, title/year, medium, dimensions, provenance, and credit line give the generated image a plausible, but explicitly fictional, institutional record. |
 
-# Install the required packages
-pip3 install flask openai python-dotenv gunicorn
+The app does **not** attempt to make every sentence opaque. It fixes the extended label at 80–120 words and avoids dense chains of jargon, so the result reads as a wall label rather than a parody generator.
 
-# Rename the file .env-bup to .env
-mv .env-bup .env
-# Then open .env and add your OPENAI_API_KEY
+## 2. How the image prompt is derived from the label
 
-# Run the app
-python3 app.py
-```
+The process is deliberately two-stage:
 
-## Windows (PowerShell)
+1. The visitor supplies a plain-language concept.
+2. The server creates a stable fictional record from that concept: artist, title, year, medium, dimensions, provenance, credit line, and extended label.
+3. It derives the actual image-generation prompt from the visitor’s concept plus the generated **artist**, **title/year**, **medium**, and the label’s curatorial themes: texture, ambiguity, “evidence and invention,” and the encounter between private desire and public display.
+4. The server adds production constraints: square composition; gallery-ready presentation; no visible text, signature, watermark, frame, caption, or museum label.
+5. `gpt-image-1` generates the image from that derived prompt. The result is then shown beside the same label that shaped it.
 
-```powershell
-# Create virtual environment
-python -m venv venv
+In short, the visitor supplies the subject matter; the fictional label provides the work’s institutional and material framing; the final image prompt combines both. See `image_prompt_from_label()` in `app.py` for the exact rules.
 
-# Activate your virtual environment
-.\venv\Scripts\Activate.ps1
+## 3. User guide
 
-# Install the required packages
-pip install flask openai python-dotenv gunicorn
+### Start the app
 
-# Rename the file .env-bup to .env
-Rename-Item .env-bup .env
-# Then open .env and add your OPENAI_API_KEY
+1. Install the dependencies with `pip install flask openai python-dotenv gunicorn` (or follow [SETUP.md](SETUP.md)).
+2. Set `OPENAI_API_KEY` in `.env`.
+3. Run `python app.py`.
+4. Open the local address Flask prints, normally `http://127.0.0.1:5000`.
 
-# Run the app
-python app.py
-```
+### Make an edition
 
-Notes for Windows:
+1. Enter a visual idea in the large prompt field—for example, “A sunlit greenhouse seen through a rain-streaked window.”
+2. Select **Create edition**. The input area changes to a loading state while the request is running.
+3. When generation is complete, view the framed image at left and its tombstone at right.
+4. Read the extended label for the fictional curatorial interpretation and the invented theorist/book citation.
+5. Select **Download image** below the tombstone to save the generated PNG.
 
-- If `python` is not recognised, use `py` instead (for example, `py -m venv venv` and `py app.py`).
-- If PowerShell says that running scripts is disabled, run this once and try the activation again:
-  `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`
-- With Command Prompt (cmd) instead of PowerShell, activate with `venv\Scripts\activate.bat` and rename with `ren .env-bup .env`.
-- `gunicorn` installs on Windows but cannot run there. It is only needed when deploying (for example, on Render), so locally always start the app with `python app.py`.
+Every new submission creates a new edition. The museum record is fictional; it is not a provenance claim or an attribution for a real artwork.
 
-## Which terminal am I using?
+## 4. Why is a language model so fluent in this dialect?
 
-Use a **Linux-style shell** if you can: the commands are the same on every platform, which makes it easier to follow tutorials and to get help.
+IAE is unusually learnable for a language model because it is a highly patterned public register. It has circulated widely in repeated, digitized forms—press releases, exhibition copy, catalog essays, artist statements, and online criticism. Those texts repeatedly pair a stable rhetorical situation (presenting a work, artist, or exhibition) with recurring vocabulary, sentence shapes, metaphors, and gestures of authority. That regularity makes the next word, phrase, and rhetorical move comparatively predictable.
 
-- **macOS / Linux:** the built-in Terminal already is one. Use the *macOS / Linux* commands below.
-- **Windows, recommended:** install [Git for Windows](https://git-scm.com/download/win), which includes **Git Bash**, or install **WSL** (Windows Subsystem for Linux) by running `wsl --install` in PowerShell. Both give you Linux-style commands.
-  - In **WSL**, use the *macOS / Linux* commands exactly as written.
-  - In **Git Bash**, use the *macOS / Linux* commands, with two changes: use `python` instead of `python3`, and activate with `source venv/Scripts/activate`.
-- **Windows, default:** the terminal in VS Code opens **PowerShell** by default (the prompt starts with `PS C:\...`). If you stay with it, use the *Windows (PowerShell)* commands below.
+Fluency should not be confused with understanding or curatorial judgment. A model can reproduce the surface conventions of IAE, including its cadence and institutional confidence, without having lived experience, an artistic practice, accountability to an artist, or independent knowledge of the work. In this app, the invented theorist and provenance make that limit visible: the voice is part of the artwork’s fiction, not evidence of scholarship.
 
-In VS Code, the dropdown next to the `+` in the terminal panel shows which shell is open and lets you pick another one (Git Bash and WSL appear there once installed).
-
-## Check that it works
-
-When the virtual environment is active, `(venv)` appears at the start of your prompt. After `python app.py` (or `python3 app.py`), open <http://127.0.0.1:5000> in your browser.
-
-VS Code may show a message saying that an environment file is configured but terminal environment injection is disabled (`python.terminal.useEnvFile`). That is fine: the app loads `.env` by itself, so you can ignore the message and leave the setting off.
-
-## Deploying on Render
-
-- **Build command:** `pip install flask openai python-dotenv gunicorn`
-- **Start command:** `gunicorn app:app`
-- **Environment variable:** `OPENAI_API_KEY` = your key. Never commit your key to GitHub.
-
-If the deploy fails with `gunicorn: command not found` (status 127), `gunicorn` is missing from the build command. If it fails with `No module named 'openai'`, `openai` is missing.
-
-### If Render times out
-
-If requests time out (the logs may show `WORKER TIMEOUT`), for example when the OpenAI call is slow, add the `--timeout` parameter to the `gunicorn` line in the Render configuration. gunicorn stops a request after 30 seconds by default, and this raises the limit to 240 seconds:
-
-- **Start command:** `gunicorn app:app --timeout 240`
+Rule and Levine’s analysis was based on a large corpus of e-flux announcements, which helps explain why this dialect has especially repeatable textual features. Their original essay is the best starting point for its lexical and grammatical characteristics: [International Art English, Triple Canopy](https://tc3.canopycanopycanopy.com/legacy/contents/international_art_english).
